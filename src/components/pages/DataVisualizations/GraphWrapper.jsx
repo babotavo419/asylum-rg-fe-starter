@@ -35,8 +35,41 @@ function GraphWrapper(props) {
         .catch(err => {
           console.error(err);
         });
+    } else if (view === 'citizenship') {
+      fetchCitizenshipData()
+        .then(result => {
+          console.log('Citizenship API Response:', result.data);
+        })
+        .catch(err => {
+          console.error(err);
+        });
     }
   }, [dispatch, office, view]);
+
+  const fetchData = (from, to, office) => {
+    let params = {
+      from: from || 2015,
+      to: to || new Date().getFullYear(),
+    };
+
+    if (office) {
+      params.office = office;
+    }
+
+    return axios.get(`${API_URL}/fiscalSummary`, { params });
+  };
+
+  const fetchCitizenshipData = (from, to, office) => {
+    let params = {
+      from: from || 2015,
+      to: to || new Date().getFullYear(),
+    };
+
+    if (office) {
+      params.office = office;
+    }
+    return axios.get(`${API_URL}/citizenshipSummary`, { params });
+  };
 
   let map_to_render;
   if (!office) {
@@ -65,19 +98,6 @@ function GraphWrapper(props) {
         break;
     }
   }
-
-  const fetchData = (from, to, office) => {
-    let params = {
-      from: from || 2015,
-      to: to || new Date().getFullYear(),
-    };
-
-    if (office) {
-      params.office = office;
-    }
-
-    return axios.get(`${API_URL}/fiscalSummary`, { params });
-  };
 
   function updateStateWithNewData(years, view, office) {
     fetchData(years[0], years[1], office)
@@ -131,6 +151,7 @@ function GraphWrapper(props) {
 
 const mapStateToProps = state => ({
   setVisualizationData: state.vizData?.timeSeriesAllData,
+  citizenshipData: state.vizData?.citizenshipData,
 });
 
 export default connect(mapStateToProps)(GraphWrapper);
