@@ -80,7 +80,6 @@ function GraphWrapper(props) {
       );
 
       fiscalSummary.data['citizenshipResults'] = citizenshipSummary.data;
-      console.log(fiscalSummary.data);
       stateSettingCallback(view, office, [fiscalSummary.data]);
     }
   }
