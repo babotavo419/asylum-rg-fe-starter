@@ -51,25 +51,30 @@ function GraphWrapper(props) {
         break;
     }
   }
-
+  // This is an asynchronous function named 'updateStateWithNewData'.
+  // It is designed to fetch new data based on the provided parameters and then use a callback
+  // to update the state with this data.
   async function updateStateWithNewData(
     years,
     view,
     office,
     stateSettingCallback
   ) {
+    // First, there is a condition that checks if the 'office' is set to 'all' or is not provided.
     if (office === 'all' || !office) {
-      const fiscalSummary = await axios.get(
+      // If the condition is true, it proceeds to make two GET requests using axios to fetch data from two different endpoints.
+      // Both requests are awaited, meaning the function will pause until both promises are resolved.
+      const fiscalSum = await axios.get(
         'https://hrf-asylum-be-b.herokuapp.com/cases/fiscalSummary',
         {
           params: {
-            from: years[0],
-            to: years[1],
+            from: years[0], // The 'from' query parameter is set to the first element in the 'years' array.
+            to: years[1], // The 'to' query parameter is set to the second element in the 'years' array.
           },
         }
       );
-
-      const citizenshipSummary = await axios.get(
+      // The second GET request fetches the citizenship summary data within the same year range.
+      const citizenSum = await axios.get(
         'https://hrf-asylum-be-b.herokuapp.com/cases/citizenshipSummary',
         {
           params: {
@@ -78,10 +83,13 @@ function GraphWrapper(props) {
           },
         }
       );
+      // After the data from both endpoints is fetched, the function adds a new key 'citizenshipResults'
+      // to the 'fiscalSummary' object and assigns it the data fetched from the citizenship summary endpoint.
+      fiscalSum.data['citizenshipResults'] = citizenSum.data;
 
-      fiscalSummary.data['citizenshipResults'] = citizenshipSummary.data;
-      console.log(fiscalSummary.data);
-      stateSettingCallback(view, office, [fiscalSummary.data]);
+      // Finally, the 'stateSettingCallback' function is called with the 'view', 'office', and the modified 'fiscalSummary.data'.
+      // This callback is responsible for updating the component's state with the new data.
+      stateSettingCallback(view, office, [fiscalSum.data]);
     }
   }
 
