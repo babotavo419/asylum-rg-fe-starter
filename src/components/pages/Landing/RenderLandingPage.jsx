@@ -6,7 +6,7 @@ import HrfPhoto from '../../../styles/Images/paper-stack.jpg';
 import '../../../styles/RenderLandingPage.less';
 import { Button } from 'antd';
 import { useHistory } from 'react-router-dom';
-import PageNav from '../../common/PageNav';
+//import PageNav from '../../common/PageNav';
 
 function RenderLandingPage(props) {
   const scrollToTop = () => {
